@@ -1,12 +1,9 @@
 USE employee_management;
 
- TRUNCATE TABLE employee_scheme_association;
+ TRUNCATE TABLE insurance_scheme;
 
-INSERT INTO employee_scheme_association (id, employee_id, scheme_id) VALUES
-(1,10001, 1),
-(2,10002, 1),
-(3,10003, 2),
-(4,10004, 2),
-(5,10005, 3),
-(6,10006, 3)
+INSERT INTO insurance_scheme (id, name, valid_from_date, valid_to_date, scheme_amount, scheme_type) VALUES
+(1,'Full Family Coverage','2024-01-08', '2034-01-08', 50000, 'ANNUAL'),
+(2,'Happiness Unlimited','2024-01-08', '2034-01-08', 60000, 'MONTHLY'),
+(3,'Freedom Package','2024-01-08', '2034-01-08', 70000, 'QUARTERLY')
 ;
