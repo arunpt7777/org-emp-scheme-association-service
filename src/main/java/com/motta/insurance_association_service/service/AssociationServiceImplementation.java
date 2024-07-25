@@ -4,7 +4,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.motta.insurance_association_service.exception.AssociationNotFoundException;
+import com.motta.insurance_association_service.exception.SchemeNotFoundException;
+import com.motta.insurance_association_service.model.SchemeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.motta.insurance_association_service.entity.Association;
@@ -14,6 +18,7 @@ import com.motta.insurance_association_service.model.AssociationDTO;
 import com.motta.insurance_association_service.repository.AssociationRepository;
 
 import jakarta.transaction.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 @Transactional
@@ -64,6 +69,42 @@ public class AssociationServiceImplementation implements AssociationService {
 	@Override
 	public void deleteAssociation(Integer id) {
 		repository.deleteById(id);
+	}
+
+	@Override
+	public AssociationDTO calculateMaxAmount(Integer schemeId) {
+
+		// Call employee-service
+		ResponseEntity<SchemeDTO> schemeResponseEntity = new RestTemplate()
+				.getForEntity("http://localhost:8800/schemes/{schemeId}", SchemeDTO.class, schemeId);
+		SchemeDTO schemeDTO = schemeResponseEntity.getBody();
+		if (schemeDTO == null) {
+			throw new SchemeNotFoundException("Scheme not found");
+		}
+
+		Integer salaryId = employeeDTO.getSalaryId();
+
+		// Call salary-service
+		ResponseEntity<SalaryDTO> salaryResponseEntity = new RestTemplate()
+				.getForEntity("http://localhost:8000/salaries/{salaryId}", SalaryDTO.class, salaryId);
+		SalaryDTO salaryDTO = salaryResponseEntity.getBody();
+		if (salaryDTO == null) {
+			throw new SalaryNotFoundException("Salary not found");
+		}
+
+		// Call attendance-service
+		ResponseEntity<AttendanceDTO> attendancResponseEntity = new RestTemplate().getForEntity(
+				"http://localhost:9000/attendancesByEmployeeId/{employeeId}", AttendanceDTO.class, employeeId);
+		AttendanceDTO attendanceDTO = attendancResponseEntity.getBody();
+
+		if (attendanceDTO == null) {
+			throw new AttendanceNotFoundException("Attendance not found");
+		}
+
+		// return salary object with updated salary
+		Double totalSalary = salaryDTO.getSalaryPerDay() * attendanceDTO.getNumberOfWorkingDays();
+		salaryDTO.setTotalSalary(totalSalary);
+		return salaryDTO;
 	}
 
 }
