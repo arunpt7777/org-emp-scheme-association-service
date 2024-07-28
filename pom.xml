@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.motta</groupId>
-	<artifactId>insurance-scheme-service</artifactId>
+	<artifactId>employee-association-association-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>insurance-scheme-service</name>
-	<description>Insurance Scheme Services</description>
+	<name>employee-association-association-service</name>
+	<description>Employee Scheme Association Services</description>
 	<properties>
 		<java.version>21</java.version>
 	</properties>

@@ -16,4 +16,8 @@ public interface AssociationService {
 
 	void deleteAssociation(Integer id);
 
+	Double calculateTotalAmountForEmployee(Integer employeeId);
+
+	List<AssociationDTO> retrieveAssociationByEmployeeId(Integer employeeId);
+
 }
