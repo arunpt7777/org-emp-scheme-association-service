@@ -31,7 +31,7 @@ public class AssociationController {
 		return new ResponseEntity<>(savedAssociation, HttpStatus.CREATED);
 	}
 
-	// Retrieve Association by id REST API
+	// Retrieve Association by id
 	@GetMapping("/associations/{id}")
 	public ResponseEntity<AssociationDTO> retrieveAssociationById(@PathVariable("id") Integer id) {
 		AssociationDTO association = associationService.retrieveAssociationById(id);
@@ -46,14 +46,14 @@ public class AssociationController {
 		return new ResponseEntity<>(association, HttpStatus.OK);
 	}
 
-	// Retrieve All Associations REST API
+	// Retrieve All Associations
 	@GetMapping("/associations")
 	public ResponseEntity<List<AssociationDTO>> retrieveAllAssociations() {
 		List<AssociationDTO> associations = associationService.retrieveAllAssociations();
 		return new ResponseEntity<>(associations, HttpStatus.OK);
 	}
 
-	// Update Association REST API
+	// Update Association
 	@PutMapping("/associations/{id}")
 	public ResponseEntity<AssociationDTO> updateAssociation(@PathVariable("id") Integer id, @RequestBody AssociationDTO associationDTO) {
 		associationDTO.setId(id);
@@ -61,12 +61,27 @@ public class AssociationController {
 		return new ResponseEntity<>(updatedAssociation, HttpStatus.OK);
 	}
 
-	// Delete Association REST API
+	// Delete Association
 	@DeleteMapping("/associations/{id}")
 	public ResponseEntity<String> deleteAssociation(@PathVariable("id") Integer id) {
 		associationService.deleteAssociation(id);
 		return new ResponseEntity<>("Association successfully deleted!", HttpStatus.OK);
 	}
+
+	// Retrieve all associations by Employee Id
+	@GetMapping("/associationsbyemployeeid/{employeeId}")
+	public ResponseEntity<List<AssociationDTO>> retrieveAssociationByEmployeeId(@PathVariable("employeeId") Integer employeeId) {
+		List<AssociationDTO> associations = associationService.retrieveAssociationByEmployeeId(employeeId);
+		return new ResponseEntity<>(associations, HttpStatus.OK);
+	}
+
+	// Retrieve total amount of all schemes for an Employee Id
+	@GetMapping("/totalamountforemployeeId/{employeeId}")
+	public ResponseEntity<Double> retrieveTotalSchemeAmountForEmployeeId(@PathVariable("employeeId") Integer employeeId) {
+		Double totalAmount = associationService.calculateTotalAmountForEmployee(employeeId);
+		return new ResponseEntity<>(totalAmount, HttpStatus.OK);
+	}
+
 
 
 }

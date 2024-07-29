@@ -11,14 +11,19 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,7 +54,7 @@ public class InsuranceAssociationTest {
 
     @DisplayName("JUnit test for getAllAssociations method")
     @Test
-    public void getAllAssociations(){
+    public void getAllAssociationsTest(){
         // given - precondition or setup
 
         Association a1 = new Association(1,10001, 1);
@@ -73,7 +78,7 @@ public class InsuranceAssociationTest {
     // JUnit test for saveEmployee method
     @DisplayName("JUnit test for createAssociation method")
     @Test
-    public void createAssociation(){
+    public void createAssociationTest(){
 
 
         // Initial Set up
@@ -87,7 +92,7 @@ public class InsuranceAssociationTest {
     }
     @DisplayName("JUnit test for updateAssociation method")
     @Test
-    public void updateAssociation(){
+    public void updateAssociationTest(){
 
         // Initial Set up
         AssociationDTO associationDTO = new AssociationDTO(3,10003, 1);
@@ -103,7 +108,7 @@ public class InsuranceAssociationTest {
 
     @DisplayName("JUnit test for deleteAssociation method")
     @Test
-    public void deleteAssociation(){
+    public void deleteAssociationTest(){
         // given - precondition or setup
         int associationId = 1;
 
@@ -115,5 +120,25 @@ public class InsuranceAssociationTest {
         // then - verify the output
         verify(associationRepository, times(1)).deleteById(associationId);
     }
+
+    @DisplayName("JUnit test for calculateTotalAmountForEmployee method")
+    @Test
+    public void calculateTotalAmountForEmployeeTest(){
+        // given - precondition or setup
+
+        Association a1 = new Association(1,10001, 1);
+        Association a2 = new Association(2,10001, 2);
+        Association a3 = new Association(3,10001, 3);
+        Association a4 = new Association(4,10001, 4);
+        Association a5 = new Association(5,10001, 5);
+        Association a6 = new Association(6,10001, 6);
+
+        // when -  action or the behaviour that we are going test
+        Double totalAmount = associationService.calculateTotalAmountForEmployee(10001);
+
+        // then - verify the output
+        assertEquals(totalAmount, 250000.0);
+    }
+
 
 }
