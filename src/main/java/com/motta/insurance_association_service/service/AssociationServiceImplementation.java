@@ -95,9 +95,6 @@ public class AssociationServiceImplementation implements AssociationService {
 		// Get all associations for the given employeeId
 		List<AssociationDTO> associationDTOS = retrieveAssociationByEmployeeId(employeeId);
 
-		if(associationDTOS.isEmpty()) {
-			throw new AssociationNotFoundException("No association found for this employee Id: " + employeeId);
-		}
 		for (AssociationDTO associationDTO: associationDTOS) {
 			// Call scheme-service
 			ResponseEntity<SchemeDTO> schemeResponseEntity = new RestTemplate()

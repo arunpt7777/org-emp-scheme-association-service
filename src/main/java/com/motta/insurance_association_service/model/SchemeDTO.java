@@ -11,17 +11,21 @@ public class SchemeDTO {
 	private Date validToDate;
 	private Double schemeAmount;
 	private String schemeType;
+	private Double share;
+	private Double brokerage;
 
 	public SchemeDTO() {
 	}
 
-	public SchemeDTO(Integer id, String name, Date validFromDate, Date validToDate, Double schemeAmount, String schemeType) {
+	public SchemeDTO(Integer id, String name, Date validFromDate, Date validToDate, Double schemeAmount, String schemeType, Double share, Double brokerage) {
 		this.id = id;
 		this.name = name;
 		this.validFromDate = validFromDate;
 		this.validToDate = validToDate;
 		this.schemeAmount = schemeAmount;
 		this.schemeType = schemeType;
+		this.share = share;
+		this.brokerage = brokerage;
 	}
 
 	public Integer getId() {
@@ -72,6 +76,22 @@ public class SchemeDTO {
 		this.schemeType = schemeType;
 	}
 
+	public Double getShare() {
+		return share;
+	}
+
+	public void setShare(Double share) {
+		this.share = share;
+	}
+
+	public Double getBrokerage() {
+		return brokerage;
+	}
+
+	public void setBrokerage(Double brokerage) {
+		this.brokerage = brokerage;
+	}
+
 	@Override
 	public String toString() {
 		return "SchemeDTO{" +
@@ -81,6 +101,8 @@ public class SchemeDTO {
 				", validToDate=" + validToDate +
 				", schemeAmount=" + schemeAmount +
 				", schemeType='" + schemeType + '\'' +
+				", share=" + share +
+				", brokerage=" + brokerage +
 				'}';
 	}
 
@@ -89,11 +111,11 @@ public class SchemeDTO {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		SchemeDTO schemeDTO = (SchemeDTO) o;
-		return Objects.equals(id, schemeDTO.id) && Objects.equals(name, schemeDTO.name) && Objects.equals(validFromDate, schemeDTO.validFromDate) && Objects.equals(validToDate, schemeDTO.validToDate) && Objects.equals(schemeAmount, schemeDTO.schemeAmount) && Objects.equals(schemeType, schemeDTO.schemeType);
+		return Objects.equals(id, schemeDTO.id) && Objects.equals(name, schemeDTO.name) && Objects.equals(validFromDate, schemeDTO.validFromDate) && Objects.equals(validToDate, schemeDTO.validToDate) && Objects.equals(schemeAmount, schemeDTO.schemeAmount) && Objects.equals(schemeType, schemeDTO.schemeType) && Objects.equals(share, schemeDTO.share) && Objects.equals(brokerage, schemeDTO.brokerage);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, name, validFromDate, validToDate, schemeAmount, schemeType);
+		return Objects.hash(id, name, validFromDate, validToDate, schemeAmount, schemeType, share, brokerage);
 	}
 }
