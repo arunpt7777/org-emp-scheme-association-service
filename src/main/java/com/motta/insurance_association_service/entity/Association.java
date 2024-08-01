@@ -9,17 +9,13 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "employee_scheme_association")
-@SequenceGenerator(name = "Custom_Sequence", sequenceName = "custom_sequence", initialValue = 7, allocationSize = 1)
+@SequenceGenerator(name = "Custom_Sequence", sequenceName = "custom_sequence", initialValue = 100, allocationSize = 1)
 public class Association {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "Custom_Sequence")
 	private Integer id;
-
-	@NotNull(message = "EmployeeId must not be empty")
 	private Integer employeeId;
-
-	@NotNull(message = "Scheme Id must not be empty")
 	private Integer schemeId;
 
 	public Association() {
