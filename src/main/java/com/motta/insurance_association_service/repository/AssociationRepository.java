@@ -6,4 +6,6 @@ import com.motta.insurance_association_service.entity.Association;
 
 public interface AssociationRepository extends JpaRepository<Association, Integer> {
 
+
+
 }
