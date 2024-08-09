@@ -83,5 +83,11 @@ public class AssociationController {
 	}
 
 
+	// Retrieve All Associations by by scheme Id REST API
+	@GetMapping("/getassociationsbyschemeid/{schemeId}")
+	public ResponseEntity<List<AssociationDTO>> getAssociationsBySchemeId(@PathVariable("schemeId") Integer schemeId) {
+		List<AssociationDTO> associations = associationService.retrieveAssociationsBySchemeId(schemeId);
+		return new ResponseEntity<>(associations, HttpStatus.OK);
+	}
 
 }

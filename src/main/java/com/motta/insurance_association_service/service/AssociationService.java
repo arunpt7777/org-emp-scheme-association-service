@@ -22,4 +22,6 @@ public interface AssociationService {
 	List<AssociationDTO> retrieveAssociationByEmployeeId(Integer employeeId);
 
 	void validateAssociationDTO(AssociationDTO associationDTO);
+
+	List<AssociationDTO> retrieveAssociationsBySchemeId(Integer schemeId);
 }

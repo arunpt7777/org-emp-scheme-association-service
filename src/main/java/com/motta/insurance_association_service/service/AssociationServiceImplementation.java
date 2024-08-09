@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.motta.insurance_association_service.exception.AssociationNotFoundException;
 import com.motta.insurance_association_service.exception.InvalidAssociationException;
 import com.motta.insurance_association_service.exception.SchemeNotFoundException;
 import com.motta.insurance_association_service.model.SchemeDTO;
@@ -34,11 +33,11 @@ public class AssociationServiceImplementation implements AssociationService {
 
 	private static final Logger log = LoggerFactory.getLogger(AssociationServiceImplementation.class);
 
-	@Value("${association.id.initalValue}")
-	private Integer initalValueOfPrimaryKey;
+	@Value("${association.id.initialValue}")
+	private Integer initialValueOfPrimaryKey;
 
 	@Autowired
-	private AssociationRepository repository;
+	private AssociationRepository associationRepository;
 
 	@Override
 	public AssociationDTO createAssociation(AssociationDTO associationDTO) {
@@ -47,8 +46,8 @@ public class AssociationServiceImplementation implements AssociationService {
 		validateAssociationDTO(associationDTO);
 
 		// Check if id already exists
-		Optional<Association> association = repository.findById(associationDTO.getId());
-		log.error("Association id = {} not found. Please enter different id", associationDTO.getId());
+		Optional<Association> association = associationRepository.findById(associationDTO.getId());
+		log.info("Association id = {} not found.", associationDTO.getId());
 
 		if (association.isPresent()) {
 			throw new AssociationAlreadyExistsException("Association id = " + associationDTO.getId() + " already Exists!");
@@ -56,7 +55,7 @@ public class AssociationServiceImplementation implements AssociationService {
 
 		// Convert AssociationDTO into User JPA Entity
 		Association newAssociation = AssociationMapper.mapToAssociation(associationDTO);
-		Association savedAssociation = repository.save(newAssociation);
+		Association savedAssociation = associationRepository.save(newAssociation);
 		log.info("Association id = {} has been persisted.", associationDTO.getId());
 
 		// Convert Association JPA entity to AssociationDTO
@@ -66,7 +65,7 @@ public class AssociationServiceImplementation implements AssociationService {
 	// Get Association by id
 	@Override
 	public AssociationDTO retrieveAssociationById(Integer id) {
-		Association association = repository.findById(id).get();
+		Association association = associationRepository.findById(id).get();
 		log.info("Association id = {} has been fetched.", association.getId());
         return AssociationMapper.mapToAssociationDTO(association);
 	}
@@ -74,7 +73,7 @@ public class AssociationServiceImplementation implements AssociationService {
 	// Get all Associations
 	@Override
 	public List<AssociationDTO> retrieveAllAssociations() {
-		List<Association> associations = repository.findAll();
+		List<Association> associations = associationRepository.findAll();
 		log.info("All associations have been fetched using .");
 		return associations.stream().map(AssociationMapper::mapToAssociationDTO).collect(Collectors.toList());
 	}
@@ -85,26 +84,26 @@ public class AssociationServiceImplementation implements AssociationService {
 		//Validate the DTO before attempting to persist
 		validateAssociationDTO(associationDTO);
 
-		Association existingAssociation = repository.findById(associationDTO.getId()).orElse(new Association(associationDTO.getId(), associationDTO.getEmployeeId(), associationDTO.getSchemeId()));
+		Association existingAssociation = associationRepository.findById(associationDTO.getId()).orElse(new Association(associationDTO.getId(), associationDTO.getEmployeeId(), associationDTO.getSchemeId()));
 		existingAssociation.setEmployeeId(associationDTO.getEmployeeId());
 		existingAssociation.setSchemeId(associationDTO.getSchemeId());
 
 
-		Association updatedAssociation = repository.save(existingAssociation);
-		log.error("Updating association id = {} has failed.", existingAssociation.getId());
+		Association updatedAssociation = associationRepository.save(existingAssociation);
+		log.info("Updating association id = {} is complete.", existingAssociation.getId());
 		return AssociationMapper.mapToAssociationDTO(updatedAssociation);
 	}
 
 	@Override
 	public void deleteAssociation(Integer id) {
-		repository.deleteById(id);
+		associationRepository.deleteById(id);
 		log.error("Deleting association id = {} has failed .", id);
 
 	}
 
 	@Override
 	public List<AssociationDTO> retrieveAssociationByEmployeeId(Integer employeeId) {
-	List<Association> associations = repository.findAll();
+	List<Association> associations = associationRepository.findAll();
 	return associations.stream().filter(asc -> asc.getEmployeeId().equals(employeeId))
 			.map(AssociationMapper::mapToAssociationDTO).collect(Collectors.toList());
 	}
@@ -145,8 +144,8 @@ public class AssociationServiceImplementation implements AssociationService {
 			throw new InvalidAssociationException("Association Id is mandatory");
 		}
 
-		if (associationDTO.getId()<initalValueOfPrimaryKey) {
-			throw new InvalidAssociationException("Association Id must not be less than the initial value of: " + initalValueOfPrimaryKey);
+		if (associationDTO.getId()< initialValueOfPrimaryKey) {
+			throw new InvalidAssociationException("Association Id must not be less than the initial value of: " + initialValueOfPrimaryKey);
 		}
 
 		if (associationDTO.getSchemeId()==null) {
@@ -158,5 +157,11 @@ public class AssociationServiceImplementation implements AssociationService {
 
 	}
 
+	@Override
+	public List<AssociationDTO> retrieveAssociationsBySchemeId(Integer schemeId) {
+		List<Association> associations = associationRepository.findAll();
+		return associations.stream().filter(association -> association.getSchemeId().equals(schemeId) )
+				.map(AssociationMapper::mapToAssociationDTO).collect(Collectors.toList());
+	}
 
 	}
