@@ -110,8 +110,11 @@ public class AssociationServiceImplementation implements AssociationService {
 
 	@Override
 	public Double calculateTotalAmountForEmployee(Integer employeeId) {
-		Double totalAmount = 0.0;
+		Double totalAmountOfEligibleSchemes = 0.0;
+		Double totalOfFutureSchemes = 0.0;
+
 		List <SchemeDTO> schemeDTOS = new ArrayList<>();
+		List <SchemeDTO> futureSchemes = new ArrayList<>();
 
 		// Get all associations for the given employeeId
 		List<AssociationDTO> associationDTOS = retrieveAssociationByEmployeeId(employeeId);
@@ -128,15 +131,24 @@ public class AssociationServiceImplementation implements AssociationService {
 			schemeDTOS.add(schemeDTO);
 		}
 
+		// Calculate total amount for future schemes
+		futureSchemes = schemeDTOS.stream().filter(schemeDTO -> schemeDTO.getValidFromDate().after(new Date())).toList();
+		for(SchemeDTO schemeDTO: futureSchemes) {
+			totalOfFutureSchemes = totalOfFutureSchemes + schemeDTO.getSchemeAmount();
+		}
+
 		// Remove invalid schemes whose FromDate is after today or ToDate is before today
 		schemeDTOS.removeIf(schemeDTO -> schemeDTO.getValidFromDate().after(new Date()) || schemeDTO.getValidToDate().before(new Date()));
-		if (schemeDTOS.isEmpty()) return 0.0;
+		if (schemeDTOS.isEmpty()) return totalAmountOfEligibleSchemes;
 
 		//Calculate total amount
 		for(SchemeDTO schemeDTO: schemeDTOS) {
-			totalAmount = totalAmount + schemeDTO.getSchemeAmount();
+			totalAmountOfEligibleSchemes = totalAmountOfEligibleSchemes + schemeDTO.getSchemeAmount();
 		}
-		return totalAmount;
+
+		if(totalAmountOfEligibleSchemes> totalOfFutureSchemes)
+		return totalAmountOfEligibleSchemes;
+		else return  totalOfFutureSchemes;
 	}
 	@Override
 	public void validateAssociationDTO(AssociationDTO associationDTO) {
@@ -163,5 +175,6 @@ public class AssociationServiceImplementation implements AssociationService {
 		return associations.stream().filter(association -> association.getSchemeId().equals(schemeId) )
 				.map(AssociationMapper::mapToAssociationDTO).collect(Collectors.toList());
 	}
+
 
 	}

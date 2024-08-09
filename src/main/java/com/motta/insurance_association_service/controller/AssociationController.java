@@ -76,11 +76,13 @@ public class AssociationController {
 	}
 
 	// Retrieve total amount of all schemes for an Employee Id
-	@GetMapping("/totalamountforemployeeId/{employeeId}")
+	@GetMapping("/totalamountforemployeeid/{employeeId}")
 	public ResponseEntity<Double> retrieveTotalSchemeAmountForEmployeeId(@PathVariable("employeeId") Integer employeeId) {
 		Double totalAmount = associationService.calculateTotalAmountForEmployee(employeeId);
 		return new ResponseEntity<>(totalAmount, HttpStatus.OK);
 	}
+
+
 
 
 	// Retrieve All Associations by by scheme Id REST API
