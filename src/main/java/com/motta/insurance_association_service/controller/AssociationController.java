@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 
-@RestController
+@RestController("association_controller")
 public class AssociationController {
 
 	@Autowired
@@ -26,22 +26,14 @@ public class AssociationController {
 
 	// create Association REST API
 	@PostMapping("/associations")
-	public ResponseEntity<AssociationDTO> createAssociation(@Valid @RequestBody AssociationDTO associationDTO) {
+	public ResponseEntity<AssociationDTO> createAssociation(@Valid @RequestBody(required = true) AssociationDTO associationDTO) {
 		AssociationDTO savedAssociation = associationService.createAssociation(associationDTO);
 		return new ResponseEntity<>(savedAssociation, HttpStatus.CREATED);
 	}
 
 	// Retrieve Association by id
 	@GetMapping("/associations/{id}")
-	public ResponseEntity<AssociationDTO> retrieveAssociationById(@PathVariable("id") Integer id) {
-		AssociationDTO association = associationService.retrieveAssociationById(id);
-		return new ResponseEntity<>(association, HttpStatus.OK);
-	}
-
-	// Retrieve Association by id using RequestParam REST API
-	// For example, http://localhost:8080/association?id=10001
-	@GetMapping("/association")
-	public ResponseEntity<AssociationDTO> retrieveAssociationByIdRequestParam(@RequestParam Integer id) {
+	public ResponseEntity<AssociationDTO> retrieveAssociationById(@PathVariable(value = "id", required = true) Integer id) {
 		AssociationDTO association = associationService.retrieveAssociationById(id);
 		return new ResponseEntity<>(association, HttpStatus.OK);
 	}
@@ -55,7 +47,7 @@ public class AssociationController {
 
 	// Update Association
 	@PutMapping("/associations/{id}")
-	public ResponseEntity<AssociationDTO> updateAssociation(@PathVariable("id") Integer id, @RequestBody AssociationDTO associationDTO) {
+	public ResponseEntity<AssociationDTO> updateAssociation(@PathVariable(value = "id",required = true) Integer id, @RequestBody AssociationDTO associationDTO) {
 		associationDTO.setId(id);
 		AssociationDTO updatedAssociation = associationService.updateAssociation(associationDTO);
 		return new ResponseEntity<>(updatedAssociation, HttpStatus.OK);
@@ -63,21 +55,21 @@ public class AssociationController {
 
 	// Delete Association
 	@DeleteMapping("/associations/{id}")
-	public ResponseEntity<String> deleteAssociation(@PathVariable("id") Integer id) {
+	public ResponseEntity<String> deleteAssociation(@PathVariable(value = "id", required = true) Integer id) {
 		associationService.deleteAssociation(id);
 		return new ResponseEntity<>("Association successfully deleted!", HttpStatus.OK);
 	}
 
 	// Retrieve all associations by Employee Id
 	@GetMapping("/associationsbyemployeeid/{employeeId}")
-	public ResponseEntity<List<AssociationDTO>> retrieveAssociationByEmployeeId(@PathVariable("employeeId") Integer employeeId) {
+	public ResponseEntity<List<AssociationDTO>> retrieveAssociationByEmployeeId(@PathVariable(value = "employeeId", required = true) Integer employeeId) {
 		List<AssociationDTO> associations = associationService.retrieveAssociationByEmployeeId(employeeId);
 		return new ResponseEntity<>(associations, HttpStatus.OK);
 	}
 
 	// Retrieve total amount of all schemes for an Employee Id
 	@GetMapping("/totalamountforemployeeid/{employeeId}")
-	public ResponseEntity<Double> retrieveTotalSchemeAmountForEmployeeId(@PathVariable("employeeId") Integer employeeId) {
+	public ResponseEntity<Double> retrieveTotalSchemeAmountForEmployeeId(@PathVariable(value = "employeeId", required = true) Integer employeeId) {
 		Double totalAmount = associationService.calculateTotalAmountForEmployee(employeeId);
 		return new ResponseEntity<>(totalAmount, HttpStatus.OK);
 	}
@@ -87,7 +79,7 @@ public class AssociationController {
 
 	// Retrieve All Associations by by scheme Id REST API
 	@GetMapping("/getassociationsbyschemeid/{schemeId}")
-	public ResponseEntity<List<AssociationDTO>> getAssociationsBySchemeId(@PathVariable("schemeId") Integer schemeId) {
+	public ResponseEntity<List<AssociationDTO>> getAssociationsBySchemeId(@PathVariable(value = "schemeId", required = true) Integer schemeId) {
 		List<AssociationDTO> associations = associationService.retrieveAssociationsBySchemeId(schemeId);
 		return new ResponseEntity<>(associations, HttpStatus.OK);
 	}

@@ -2,16 +2,23 @@ package com.motta.insurance_association_service.mapper;
 
 import com.motta.insurance_association_service.entity.Association;
 import com.motta.insurance_association_service.model.AssociationDTO;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Component;
 
+@Component
 public class AssociationMapper {
 
 	// Convert Association JPA Entity into AssociationDTO
-	public static AssociationDTO mapToAssociationDTO(Association association) {
-        return new AssociationDTO(association.getId(), association.getEmployeeId(), association.getSchemeId());
+	public AssociationDTO mapToAssociationDTO(Association association) {
+		AssociationDTO schemeDTO = new AssociationDTO();
+		BeanUtils.copyProperties(association, schemeDTO);
+        return schemeDTO;
 	}
 
 	// Convert AssociationDTO into Association JPA Entity
-	public static Association mapToAssociation(AssociationDTO associationDTO) {
-        return new Association(associationDTO.getId(), associationDTO.getEmployeeId(), associationDTO.getSchemeId());
+	public Association mapToAssociation(AssociationDTO associationDTO) {
+		Association association = new Association();
+		BeanUtils.copyProperties(association, associationDTO);
+		return association;
 	}
 }
